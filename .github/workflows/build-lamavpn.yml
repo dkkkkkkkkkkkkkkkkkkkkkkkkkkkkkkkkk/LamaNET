@@ -34,7 +34,10 @@ jobs:
           echo "ANDROID_HOME=/usr/local/lib/android/sdk" >> "$GITHUB_ENV"
           SDKMANAGER="$(find /usr/local/lib/android/sdk/cmdline-tools -type f -name sdkmanager | sort | tail -n 1)"
           yes | "$SDKMANAGER" --licenses >/dev/null
-          "$SDKMANAGER" "platform-tools" "platforms;android-36" "platforms;android-34" "build-tools;36.0.0" "build-tools;34.0.0"
+          "$SDKMANAGER" "platform-tools" "platforms;android-37.0" "platforms;android-34" "build-tools;37.0.0" "build-tools;34.0.0"
+          if [ -d "$ANDROID_HOME/platforms/android-37.0" ] && [ ! -e "$ANDROID_HOME/platforms/android-37" ]; then
+            ln -s android-37.0 "$ANDROID_HOME/platforms/android-37"
+          fi
 
       - name: Apply LamaVPN branding
         run: python3 scripts/rebrand.py upstream
