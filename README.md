@@ -22,3 +22,6 @@ This first version is a **single-device local prototype**, not a replacement for
 5. Extract the ZIP and install `app-debug.apk` on an Android device.
 
 The workflow builds a debug APK using JDK 17, Gradle 8.7, Android Gradle Plugin 8.6.1 and Android SDK 35.
+
+
+Build workflow: `.github/workflows/build-apk.yml`.
