@@ -115,7 +115,7 @@ class MainActivity : Activity() {
     private lateinit var actionButton: TextView
     private lateinit var serverList: LinearLayout
     private lateinit var trafficText: TextView
-    private lateinit var orb: View
+    private lateinit var orb: FrameLayout
     private var selectedId: String? = null
     private var connected = false
     private var busy = false
@@ -518,7 +518,7 @@ class MainActivity : Activity() {
         }
     }
 
-    private fun setBusy(value: Boolean, label: String) {
+    private fun setBusy(value: Boolean, label: String = "CONNECT SECURELY") {
         busy = value
         if (::actionButton.isInitialized) {
             actionButton.isEnabled = !value
