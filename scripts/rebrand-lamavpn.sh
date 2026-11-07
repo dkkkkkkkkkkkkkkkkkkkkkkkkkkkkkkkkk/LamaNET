@@ -71,6 +71,32 @@ s = s.replace("// Primary — Pure White Accent", "// Primary — LamaVPN electr
 s = s.replace("// Canvas & Surfaces", "// LamaVPN midnight-navy surfaces")
 colors.write_text(s)
 
+# Make the diagnostics terminal reflect the new product name and show the
+# upstream relay network's real logging policy inside the app.
+logs = app / "src/main/java/com/payaq/opengatevpn/ui/main/LogsTab.kt"
+log_source = logs.read_text()
+log_source = log_source.replace("opengate@terminal:~$", "lamavpn@terminal:~$")
+log_source = log_source.replace("opengate:~#", "lamavpn:~#")
+warning_marker = "        // ── Endpoint & Traffic Row ──"
+privacy_note = """        // ── VPN Gate public-relay privacy notice ──
+        Text(
+            text = "PUBLIC RELAY PRIVACY · VPN Gate connection logs are kept for at least 3 months; volunteer relays keep packet-header logs for at least 2 weeks. Do not use these public servers for sensitive activity.",
+            style = TechnicalData.copy(fontSize = 10.sp),
+            color = Color(0xFFFFC15C),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp))
+                .border(1.dp, Color(0xFF654C26), RoundedCornerShape(8.dp))
+                .background(Color(0xFF211B10))
+                .padding(10.dp)
+        )
+
+"""
+if warning_marker not in log_source:
+    raise SystemExit("Could not find LogsTab insertion point")
+log_source = log_source.replace(warning_marker, privacy_note + warning_marker, 1)
+logs.write_text(log_source)
+
 # Replace the app mark with an original LamaVPN shield vector.
 logo = app / "src/main/res/drawable/ic_opengate_logo.xml"
 logo.write_text('''<?xml version="1.0" encoding="utf-8"?>
