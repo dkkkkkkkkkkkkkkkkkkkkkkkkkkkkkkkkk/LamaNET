@@ -6,6 +6,7 @@
         android:name=".LamaVpnApp"
         android:allowBackup="false"
         android:label="LamaVPN"
+        android:icon="@drawable/ic_lamavpn"
         android:supportsRtl="true"
         android:theme="@style/LamaVpnTheme"
         android:usesCleartextTraffic="false">
