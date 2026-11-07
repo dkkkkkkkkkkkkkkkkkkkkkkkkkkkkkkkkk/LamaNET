@@ -1,61 +1,43 @@
-# LamaVPN
+# LamaVPN — Native Android VPN client
 
-LamaVPN is a native Android VPN client for the public VPN Gate relay directory.
-
-## Real protocol and tunnel
-
-This build is based on the open-source OpenGateVPN Android client and its bundled OpenVPN engine. It reads the live VPN Gate CSV directory over HTTPS, extracts the OpenVPN profiles supplied by each relay, and launches the selected profile through Android's `VpnService`. It is not a website wrapper and does not use the unrelated WireGuard protocol for VPN Gate nodes.
+LamaVPN is an Android-native VPN client for the public volunteer relay network provided by [VPN Gate](https://www.vpngate.net/). It uses the official VPN Gate CSV directory over HTTPS and imports the embedded OpenVPN configuration for each selected relay into a bundled OpenVPN engine.
 
 ## Features
 
-- Live VPN Gate public relay directory.
-- Country flags, server search, filtering, ping and advertised throughput.
-- Smart ranking and server selection.
-- Native OpenVPN tunnel using the bundled OpenVPN engine.
-- Android VPN permission dialog and system VPN notification.
-- Connection state, retry handling, session timer and traffic counters.
-- Server switching, pause/resume and diagnostics logs.
-- Premium dark navy / teal LamaVPN branding.
+- Native Jetpack Compose interface (not a website or WebView)
+- Live public server directory from VPN Gate
+- Country flags, server search, country filters, and sorting by quality / ping / speed / sessions
+- Smart Connect ranking and manual server selection
+- Real OpenVPN tunnel through Android's VPNService
+- Connection status from the OpenVPN engine, not a decorative UI toggle
+- Live upload/download traffic telemetry, connection timer, diagnostics
+- Pause/resume and retry/recovery flows included in the upstream engine/client
+- Android 7.0+ (API 24+) with arm64-v8a and armeabi-v7a support
 
-## Connect
+## Public server source
 
-1. Open LamaVPN and allow the server directory to load.
-2. Choose a country/server or use the recommended server.
-3. Tap Connect and accept Android's VPN permission dialog.
-4. Wait until the OpenVPN engine reports that the tunnel is connected.
+The server list is fetched at runtime from:
 
-The app reports Connected only after the engine reports a completed OpenVPN connection. A selected row or an active connection attempt is not proof of a working tunnel.
+`https://www.vpngate.net/api/iphone/`
 
-## About the free servers
+VPN Gate's CSV includes the hostname, IP, score, ping, throughput, country, uptime, sessions, and a Base64-encoded OpenVPN profile. LamaVPN uses that profile; it does **not** treat a raw IP address as a WireGuard endpoint.
 
-The public relays are volunteered by third parties. They can be slow, busy, offline or disappear without notice. They are not a guaranteed commercial VPN service. VPN Gate's published anti-abuse policy says connection logs are retained for at least three months, and each volunteer relay keeps packet-header logs for at least two weeks. Do not use volunteer relays for banking, passwords, private work, or other sensitive traffic. Use HTTPS and other end-to-end encryption regardless of VPN status.
+The public relays are volunteered by third parties. They can disappear, be overloaded, or be operated by people you do not know. Do not use community relays for banking, sensitive accounts, or other confidential activity. VPN Gate documents a two-week logging policy on its public server listing. A VPN does not make an untrusted operator trustworthy.
 
-VPN Gate's published public-server username and password are `vpn` / `vpn`. LamaVPN retrieves profiles from the official VPN Gate API; it does not hard-code stale IP addresses from screenshots or old lists.
+## Source and licensing
 
-Official directory: https://www.vpngate.net/en/
-Official CSV API: https://www.vpngate.net/api/iphone/
+This build is based on [OpenGate VPN by Iyed Amiri](https://github.com/IyedAmiri/OpenGateVPN), pinned to commit `12f8ea97976f1bac0307a013b40712098b865d43`, with LamaVPN branding and palette applied by `scripts/rebrand.py`.
 
-## Build from source
+The upstream project and bundled OpenVPN engine are GPL-3.0. This derivative is therefore published under GPL-3.0 as well. The upstream source, its license, and its acknowledgements are retained in the build input; the source can be reconstructed using the pinned commit and the branding script in this repository. See [VPN Gate](https://www.vpngate.net/) and [OpenVPN for Android](https://github.com/schwabe/ics-openvpn) for their respective project information.
 
-The original OpenGateVPN engine and application are included as a pinned Git submodule at `opengate-engine`. The GitHub Actions workflow checks out that source, applies the LamaVPN branding overlay, builds the Android APK, and uploads it as the `LamaVPN-debug-apk` artifact.
+## Build
 
-To reproduce locally:
+Push to the `lamavpn` branch or run **Actions → Build LamaVPN Android APK**. The workflow checks out the pinned open-source engine, applies the branding script, and runs:
 
-```bash
-git clone --recurse-submodules https://github.com/dkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk/LamaNET.git
-cd LamaNET
-git checkout lamavpn
-git submodule update --init --recursive
-bash scripts/rebrand-lamavpn.sh
-cd opengate-engine
-./gradlew assembleDebug
-```
+`./gradlew assembleDebug`
 
-APK output: `opengate-engine/app/build/outputs/apk/debug/app-debug.apk`.
+The APK is uploaded as the `LamaVPN-native-debug-apk` artifact.
 
-## Open-source licenses and attribution
+## Important
 
-The upstream OpenGateVPN project is licensed under GPL-3.0 and includes the OpenVPN for Android-derived `vpnLib`. This LamaVPN distribution retains the upstream source and license through the pinned submodule. The LamaVPN branding overlay and this repository's integration workflow are provided for this GPL-3.0 derivative; see `opengate-engine/LICENSE` and `opengate-engine/vpnLib/LICENSE` for upstream license terms.
-
-Upstream project: https://github.com/IyedAmiri/OpenGateVPN
-VPN Gate: https://www.vpngate.net/
+This app connects to third-party public VPN relays. It cannot guarantee uninterrupted service, anonymity, zero logging, or a particular speed. Server status and connection quality must be checked live on the device.
