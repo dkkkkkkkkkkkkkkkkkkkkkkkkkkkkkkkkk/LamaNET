@@ -33,6 +33,7 @@ gradle_file = root / "app/build.gradle.kts"
 content = gradle_file.read_text(encoding="utf-8")
 content = content.replace('namespace = "com.payaq.opengatevpn"', 'namespace = "com.lamavpn.app"')
 content = content.replace('applicationId = "com.payaq.opengatevpn"', 'applicationId = "com.lamavpn.app"')
+content = content.replace("release(37)", "release(36)").replace("targetSdk = 37", "targetSdk = 36")
 gradle_file.write_text(content, encoding="utf-8")
 
 settings = root / "settings.gradle.kts"
