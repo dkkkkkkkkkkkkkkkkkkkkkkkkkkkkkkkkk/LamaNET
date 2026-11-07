@@ -1,0 +1,3 @@
+[submodule "opengate-engine"]
+	path = opengate-engine
+	url = https://github.com/IyedAmiri/OpenGateVPN.git

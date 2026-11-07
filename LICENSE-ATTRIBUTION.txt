@@ -1,0 +1,1 @@
+LamaVPN is distributed as a GPL-3.0 derivative of the OpenGateVPN Android project. The complete upstream project is included as a pinned Git submodule at opengate-engine. Retain all upstream license and attribution notices when redistributing or modifying this build.
