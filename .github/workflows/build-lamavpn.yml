@@ -38,7 +38,9 @@ jobs:
 
       - name: Build native Android APK
         working-directory: opengate-engine
-        run: ./gradlew --no-daemon --stacktrace clean assembleDebug
+        run: |
+          chmod +x ./gradlew
+          ./gradlew --no-daemon --stacktrace clean assembleDebug
 
       - name: Upload LamaVPN APK
         uses: actions/upload-artifact@v4
