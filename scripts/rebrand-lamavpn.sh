@@ -20,6 +20,8 @@ gradle = app / "build.gradle.kts"
 s = gradle.read_text()
 s = s.replace('applicationId = "com.payaq.opengatevpn"', 'applicationId = "com.lamavpn.app"')
 s = s.replace('versionName = "1.2.0"', 'versionName = "2.0.0"')
+s = s.replace('version = release(37)', 'version = release(35)')
+s = s.replace('targetSdk = 37', 'targetSdk = 35')
 gradle.write_text(s)
 
 # User-visible branding.
