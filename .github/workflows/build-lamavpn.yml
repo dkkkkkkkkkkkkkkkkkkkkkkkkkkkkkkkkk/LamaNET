@@ -1,9 +1,8 @@
-name: Build LamaVPN APK
+name: Build LamaVPN Android APK
 
 on:
   push:
-    branches:
-      - lamavpn
+    branches: [lamavpn]
   workflow_dispatch:
 
 permissions:
@@ -11,33 +10,35 @@ permissions:
 
 jobs:
   build:
-    name: Build LamaVPN Android APK
+    name: Build native LamaVPN client
     runs-on: ubuntu-latest
     steps:
-      - name: Check out LamaVPN and engine
+      - name: Checkout LamaVPN build scripts
+        uses: actions/checkout@v4
+
+      - name: Checkout pinned VPN Gate client engine
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          repository: IyedAmiri/OpenGateVPN
+          ref: 12f8ea97976f1bac0307a013b40712098b865d43
+          path: upstream
 
-      - name: Set up JDK 17
+      - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
 
-      - name: Set up Android SDK
+      - name: Install Android SDK platforms
         uses: android-actions/setup-android@v3
-        with:
-          packages: platform-tools
-
-      - name: Install Android SDK 37.0
-        run: sdkmanager "platforms;android-37.0" "build-tools;37.0.0"
+      - name: Install required SDK packages
+        run: sdkmanager "platforms;android-37" "platforms;android-34" "build-tools;37.0.0" "build-tools;34.0.0"
 
       - name: Apply LamaVPN branding
-        run: bash scripts/rebrand-lamavpn.sh
+        run: python3 scripts/rebrand.py upstream
 
-      - name: Build native Android APK
-        working-directory: opengate-engine
+      - name: Build debug APK
+        working-directory: upstream
         run: |
           chmod +x ./gradlew
           ./gradlew --no-daemon --stacktrace clean assembleDebug
@@ -45,7 +46,7 @@ jobs:
       - name: Upload LamaVPN APK
         uses: actions/upload-artifact@v4
         with:
-          name: LamaVPN-debug-apk
-          path: opengate-engine/app/build/outputs/apk/debug/app-debug.apk
+          name: LamaVPN-native-debug-apk
+          path: upstream/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
