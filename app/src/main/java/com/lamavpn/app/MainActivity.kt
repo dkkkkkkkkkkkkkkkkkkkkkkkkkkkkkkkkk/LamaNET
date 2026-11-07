@@ -25,7 +25,6 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.config.Config
 import java.io.ByteArrayInputStream
@@ -105,7 +104,7 @@ private class EncryptedConfigStore(activity: Activity) {
     }
 }
 
-class MainActivity : ComponentActivity() {
+class MainActivity : Activity() {
     private val io = Executors.newSingleThreadExecutor()
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var store: EncryptedConfigStore
@@ -127,7 +126,7 @@ class MainActivity : ComponentActivity() {
             if (!connected || tunnel == null) return
             try {
                 val stats = app.wireGuardBackend.getStatistics(tunnel)
-                val latest = stats.peers().mapNotNull { stats.peer(it)?.latestHandshakeEpochMillis }.maxOrNull() ?: 0L
+                val latest = stats.peers().mapNotNull { stats.peer(it)?.latestHandshakeEpochMillis() }.maxOrNull() ?: 0L
                 val handshakeAge = if (latest > 0L) System.currentTimeMillis() - latest else Long.MAX_VALUE
                 val handshakeOkay = handshakeAge in 0..180_000
                 statusTitle.text = if (handshakeOkay) "Protected connection" else "Tunnel active"
