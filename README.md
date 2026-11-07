@@ -28,7 +28,7 @@ The app reports Connected only after the engine reports a completed OpenVPN conn
 
 ## About the free servers
 
-The public relays are volunteered by third parties. They can be slow, busy, offline or disappear without notice. They are not a guaranteed commercial VPN service. Do not use volunteer relays for banking, passwords, private work, or other sensitive traffic. The relay operator may be able to observe connection metadata and unencrypted traffic. Use HTTPS and other end-to-end encryption regardless of VPN status.
+The public relays are volunteered by third parties. They can be slow, busy, offline or disappear without notice. They are not a guaranteed commercial VPN service. VPN Gate's published anti-abuse policy says connection logs are retained for at least three months, and each volunteer relay keeps packet-header logs for at least two weeks. Do not use volunteer relays for banking, passwords, private work, or other sensitive traffic. Use HTTPS and other end-to-end encryption regardless of VPN status.
 
 VPN Gate's published public-server username and password are `vpn` / `vpn`. LamaVPN retrieves profiles from the official VPN Gate API; it does not hard-code stale IP addresses from screenshots or old lists.
 
