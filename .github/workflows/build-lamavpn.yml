@@ -29,10 +29,12 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Install Android SDK platforms
-        uses: android-actions/setup-android@v3
-      - name: Install required SDK packages
-        run: sdkmanager "platforms;android-37" "platforms;android-34" "build-tools;37.0.0" "build-tools;34.0.0"
+      - name: Install required Android SDK packages
+        run: |
+          echo "ANDROID_HOME=/usr/local/lib/android/sdk" >> "$GITHUB_ENV"
+          SDKMANAGER="$(find /usr/local/lib/android/sdk/cmdline-tools -type f -name sdkmanager | sort | tail -n 1)"
+          yes | "$SDKMANAGER" --licenses >/dev/null
+          "$SDKMANAGER" "platform-tools" "platforms;android-37" "platforms;android-34" "build-tools;37.0.0" "build-tools;34.0.0"
 
       - name: Apply LamaVPN branding
         run: python3 scripts/rebrand.py upstream
